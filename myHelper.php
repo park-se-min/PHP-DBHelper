@@ -1,4 +1,5 @@
 <?php
+1
 	class MyHelper
 	{
 		// DB

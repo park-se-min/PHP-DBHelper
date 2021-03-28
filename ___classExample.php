@@ -1,4 +1,5 @@
 <?php
+1
 	include_once $_SERVER["DOCUMENT_ROOT"] ."/classes/myHelper.php";
 
 	$my = new MyHelper();
