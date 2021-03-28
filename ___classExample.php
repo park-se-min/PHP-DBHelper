@@ -1,5 +1,5 @@
 <?php
-	include_once $_SERVER["DOCUMENT_ROOT"] ."/classes/myAutoload.php";
+	include_once $_SERVER["DOCUMENT_ROOT"] ."/classes/myHelper.php";
 
 	/* 주의사항 */
 	// run 제외하고 setTable 부터 꼭 해야됨
