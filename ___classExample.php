@@ -1,22 +1,6 @@
-# 🔥 PHP-DBHelper 🔥
-
----
-## 💡 include
-
-```php
 <?php
-	include_once $_SERVER['DOCUMENT_ROOT'] .'/classes/myHelper.php';
+	include_once $_SERVER["DOCUMENT_ROOT"] ."/classes/myAutoload.php";
 
-	$my = new MyFunction();
-?>
-```
----
-
-
-## 💡 setup
-
-```php
-<?php
 	/* 주의사항 */
 	// run 제외하고 setTable 부터 꼭 해야됨
 
@@ -47,15 +31,7 @@
 			pdRegDate datetime NOT NULL
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	");
-?>
-```
----
 
-
-## 💡 data
-
-```php
-<?php
 	// --------------------------------------------------
 	/* 파라미터 */
 	// --------------------------------------------------
@@ -83,15 +59,49 @@
 
 		$productTestParam[] = $param;
 	}
-?>
-```
----
+
+	// --------------------------------------------------
+	/* DOC */
+	// --------------------------------------------------
+	/*
+		beginTran: 트랜젝션
+		commitTran: 커밋
+		rollbackTran: 롤백
+
+		setError: 에러
+		setDebug: 디버그 모드
+		setPrint: SQL문 print
+
+		setTable: 테이블
+		setParam: 파라미터
+		setColumn: select 컬럼
+		setWhere: 조건
+		setGroupBy: 그룹
+		setHaving: having 조건
+		setOrderBy: 정렬
+		setLimit: 제한
+
+		getLastId: 입력했던 데이터 seq
+		getListNumber: 리스트 번호
+		setPage: 현재 페이지
+		setPageRow: 목록 개수
+
+		insert: isnert 조합
+		update: update 조합
+		delete: delete 조합
+		select: select 조합
+
+		execute: 실행
+		executeTran: 트랜젝션 포함 실행
+
+		run: SQL문 실행
+		runTran: SQL문 트랜젝션 포함 실행
+	*/
 
 
-## 💡 insert
-
-```php
-<?php
+	// --------------------------------------------------
+	/* 입력 */
+	// --------------------------------------------------
 	// 방식1
 	$my->setTable("memberTest");
 	$my->setParam($memberTestParam[0]);
@@ -168,25 +178,15 @@
 		// dbHelper 이용시 필수로 넣어줘야됨. (다음 코드가 실행되기때문.)
 		$my->resetPropertyAll();
 	}
-?>
-```
----
 
-
-## 💡 insert > last id
-
-```php
-<?php
 	// last id
 	print_r($my->getLastId());
 	print_r($my->getLastIdArray());
-?>
-```
----
 
-## 💡 update
-```php
-<?php
+
+	// --------------------------------------------------
+	/* 수정 */
+	// --------------------------------------------------
 	// 방식1
 	// 1번데이터 5번데이터로 update
 	$my->setTable("memberTest")->setParam($memberTestParam[4])->setWhere("mbSeq=?", "1")->update()->executeTran();
@@ -212,15 +212,11 @@
 
 	// $my->setDebug(); // 쿼리로그 찍어보기
 	$my->update()->executeTran();
-?>
-```
----
 
 
-## 💡 delete
-
-```php
-<?php
+	// --------------------------------------------------
+	/* 삭제 */
+	// --------------------------------------------------
 	// 방식1
 	$my->setTable("memberTest")->setWhere("mbSeq=?", "1")->delete()->executeTran();
 
@@ -237,15 +233,11 @@
 	// $my->setDebug(); // 쿼리로그 찍어보기
 	$my->delete();
 	$my->executeTran();
-?>
-```
----
 
 
-## 💡 list
-
-```php
-<?php
+	// --------------------------------------------------
+	/* 리스트 */
+	// --------------------------------------------------
 	// 방식1
 	$row = $my->setTable("memberTest")->select()->get();
 
@@ -349,87 +341,13 @@
 		print_r($row[$i]); echo "<br>";
 	}
 	echo "<br>";
-?>
-```
----
 
 
-## 💡 debug
-
-```php
-<?php
-	$my->setDebug();
-?>
-```
----
-
-
-## 💡 error
-
-```php
-<?php
+	// --------------------------------------------------
+	/* error */
+	// --------------------------------------------------
 	if (!empty($my->getError())) {
 		echo "에러";
 		exit;
 	}
 ?>
-```
----
-
-
-## 📄 DOC
-
-#### 🌈 tran
-|    Option    | Description |
-| :----------- | :---------- |
-| beginTran    | 트랜젝션    |
-| commitTran   | 커밋        |
-| rollbackTran | 롤백        |
-
-#### 🌈 error, debug, print
-|  Option  | Description |
-| :------- | :---------- |
-| setError | 에러        |
-| setDebug | 디버그 모드 |
-| setPrint | SQL문 print |
-
-#### 🌈 default
-|   Option   | Description |
-| :--------- | :---------- |
-| setTable   | 테이블      |
-| setParam   | 파라미터    |
-| setColumn  | select 컬럼 |
-| setWhere   | 조건        |
-| setGroupBy | 그룹        |
-| setHaving  | having 조건 |
-| setOrderBy | 정렬        |
-| setLimit   | 제한        |
-
-#### 🌈 seq, paging
-|    Option     |     Description     |
-| :------------ | :------------------ |
-| getLastId     | 입력했던 데이터 seq |
-| getListNumber | 리스트 번호         |
-| setPage       | 현재 페이지         |
-| setPageRow    | 목록 개수           |
-
-#### 🌈 sql
-| Option | Description |
-| :----- | :---------- |
-| insert | isnert 조합 |
-| update | update 조합 |
-| delete | delete 조합 |
-| select | select 조합 |
-
-#### 🌈 execute
-|   Option    |    Description     |
-| :---------- | :----------------- |
-| execute     | 실행               |
-| executeTran | 트랜젝션 포함 실행 |
-
-#### 🌈 cms
-| Option  |       Description        |
-| :------ | :----------------------- |
-| run     | SQL문 실행               |
-| runTran | SQL문 트랜젝션 포함 실행 |
----
