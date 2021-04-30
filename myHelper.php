@@ -2,12 +2,12 @@
 	class MyHelper
 	{
 		// DB
-		private $dbHost = "localhost";
-		private $dbUser = "root";
-		private $dbPassword = "";
-		private $dbDbname = "g5";
-		private $dbPort = "3306";
-		private $dbCharset = "utf8";
+		private $dbHost = MY_DB_HOST;
+		private $dbUser = MY_DB_USER;
+		private $dbPassword = MY_DB_PASSWORD;
+		private $dbDbname = MY_DB_DBNAME;
+		private $dbPort = MY_DB_PORT;
+		private $dbCharset = MY_DB_CHARSET;
 
 		// pdo 객체
 		private $db;
@@ -72,7 +72,7 @@
 		// DB
 		// --------------------------------------------------
 		/* DB 연결 함수 */
-		public function sqlConnect(){
+		public function sqlConnect() {
 			$this->sql = "mysql:host=". $this->dbHost ."; port=". $this->dbPort ."; dbname=". $this->dbDbname ."; charset=". $this->dbCharset .";";
 
 			try {
@@ -149,7 +149,8 @@
 				$stmt->execute($arrayAalue);
 
 				// row 대입
-				$this->sqlRow = $stmt->fetchAll();
+//				$this->sqlRow = $stmt->fetchAll();
+				$this->sqlRow = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 				// 프로퍼티 재정의
 				$this->resetPropertyLock();
@@ -181,7 +182,8 @@
 
 			// 리턴
 			try {
-				return $stmt->fetchAll();
+//				return $stmt->fetchAll();
+				return $stmt->fetchAll(PDO::FETCH_ASSOC);
 			} catch(PDOException $e) {
 			}
 		}
@@ -242,6 +244,15 @@
 
 			// 총 개수
 			$this->sqlCount = $row[0]["count"];
+
+			return $this;
+		}
+
+		/* SQL count reset */
+		public function countOnly() {
+			$this->count();
+
+			$this->resetPropertyAll();
 
 			return $this;
 		}
@@ -536,7 +547,7 @@
 			if ($section == "groupby") { $arrayDefault = array(" GROUP BY ", array(), array()); }
 
 			// having 조건
-			if ($section == "having") { $arrayDefault = array(" HAVING ", array(), array()); }
+			if ($section == "having") { $arrayDefault = array(" HAVING 1=1 ", array(), array()); }
 
 			// 정렬
 			if ($section == "orderby") { $arrayDefault = array(" ORDER BY ", array(), array()); }
@@ -569,11 +580,11 @@
 
 					// 배열에 담긴 where 조건
 					foreach ($sqlSection[$this->section][$key] as $key2=>$value) {
-						if (in_array($this->section, array("column", "groupby", "having", "orderby", "limit"))) {
+						if (in_array($this->section, array("column", "groupby", "orderby", "limit"))) {
 							$arrayColumn[] = $sqlSection[$this->section][$key][$key2]["column"];
 						}
 
-						if (in_array($this->section, array("where"))) {
+						if (in_array($this->section, array("where", "having"))) {
 							$arrayColumn[] = $sqlSection[$this->section][$key][$key2]["operator"] ." ". $sqlSection[$this->section][$key][$key2]["column"];
 						}
 
@@ -614,7 +625,7 @@
 		}
 
 		/* 컬럼 */
-		public function setColumn($column, $value="") {
+		public function setColumn($column, $value=array()) {
 			$this->section = "column";
 
 			$this->setSection($column, $value);
